@@ -23,7 +23,7 @@
 
 ESP32-S3支持使用汇编代码或调用 CPU 低层 API 来操作 GPIO，ESP32-S3有GPIO控制指令可以使用，库中也有对应的辅助内联函数。
 
-[ESP32-IDF编程指南]: https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html
+以下内容摘自[`ESP32-IDF编程指南`]([https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html#_CPPv421dedic_gpio_new_bundlePK26dedic_gpio_bundle_config_tP26dedic_gpio_bundle_handle_t](https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html))
 
 > 高阶用户可以通过编写汇编代码或调用 CPU 低层 API 来操作 GPIO。常见步骤为：
 >
