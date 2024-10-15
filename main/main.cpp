@@ -3,9 +3,6 @@
 #include "GPIOformat.hpp"
 #include "wave_gen.hpp"
 #include "UARTtrans.hpp"
-//#include "esp_spiffs.h"
-#include "FreeRTOSConfig.h"
-
 
 #define FORMAT_SPIFFS_IF_FAILED true
 #define ADC_SAMPLE_SIZE 256
@@ -60,22 +57,22 @@ void command_loop(void)
 {
   int length = 0;
   //char* received_chars = "";
-  uart_get_buffered_data_len(UART_NUM_2PC, (size_t*)&length);
+  uart_get_buffered_data_len(UART_NUM_PC, (size_t*)&length);
   // 如果串口是空的直接返回
   if (length == 0)
     return;
   char received_chars[10];
   vTaskDelay(1 / portTICK_PERIOD_MS);
   // 从串口读取返回的数据，读取20个字符
-  uart_read_bytes(UART_NUM_2PC, received_chars, length, 100);
+  uart_read_bytes(UART_NUM_PC, received_chars, length, 100);
 
   // 根据指令做不同动作
   if (received_chars[0] == 'F') // F指令设置波形发生器频率
   {
     int F = atoi(received_chars + 1);
     wave_gen.set_freq(F);
-    //uart_write_bytes(UART_NUM_2PC, (const char*)received_chars, strlen(received_chars));
-    uart_write_bytes(UART_NUM_2PC, (const char*)received_chars, strlen(received_chars));
+    //uart_write_bytes(UART_NUM_PC, (const char*)received_chars, strlen(received_chars));
+    uart_write_bytes(UART_NUM_PC, (const char*)received_chars, strlen(received_chars));
     //等效于Serial.printf("%s,%d\n", received_chars, F);
 
   } 
@@ -84,21 +81,21 @@ void command_loop(void)
     int D = atoi(received_chars + 1);
     wave_gen.set_duty(D);
     //Serial.printf("%s,%d\n", received_chars, D);
-    uart_write_bytes(UART_NUM_2PC, (const char*)received_chars, strlen(received_chars));
+    uart_write_bytes(UART_NUM_PC, (const char*)received_chars, strlen(received_chars));
   }
   if (received_chars[0] == 'U') // U指令设置波形发生器峰峰值
   {
     double U = atof(received_chars + 1);
     wave_gen.set_uMaxValue(U);
     //Serial.printf("%s,%.3f\n", received_chars, U);
-    uart_write_bytes(UART_NUM_2PC, (const char*)received_chars, strlen(received_chars));
+    uart_write_bytes(UART_NUM_PC, (const char*)received_chars, strlen(received_chars));
   }
   if (received_chars[0] == 'B') // B指令设置波形发生器偏置电压
   {
     double B = atof(received_chars + 1);
     wave_gen.set_offSetValue(B);
     //Serial.printf("%s,%.3f\n", received_chars, B);
-    uart_write_bytes(UART_NUM_2PC, (const char*)received_chars, strlen(received_chars));
+    uart_write_bytes(UART_NUM_PC, (const char*)received_chars, strlen(received_chars));
   }
   if (received_chars[0] == 'W') // W指令设置波形种类
   {
@@ -107,7 +104,7 @@ void command_loop(void)
   }
   //  最后清空串口
   while (length >= 0)
-    uart_flush(UART_NUM_2PC);
+    uart_flush(UART_NUM_PC);
 }
 
 /*******************************************************************************
