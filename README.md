@@ -21,20 +21,16 @@
 
 #### 3.通过专用GPIO组进行通信
 
-ESP32-S3支持使用汇编代码或调用 CPU 低层 API 来操作 GPIO，ESP32-S3有GPIO控制指令可以使用，库中。
+ESP32-S3支持使用汇编代码或调用 CPU 低层 API 来操作 GPIO，ESP32-S3有GPIO控制指令可以使用，库中也有对应的辅助内联函数。
 
-以下内容来自
+[ESP32-IDF编程指南]: https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html
 
-[ESP32-IDF编程指南]: https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html	"ESP32-IDF编程指南"
-
-高阶用户可以通过编写汇编代码或调用 CPU 低层 API 来操作 GPIO。常见步骤为：
-
-1. 分配一个 GPIO 捆绑包：[`dedic_gpio_new_bundle()`](https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html#_CPPv421dedic_gpio_new_bundlePK26dedic_gpio_bundle_config_tP26dedic_gpio_bundle_handle_t)
-2. 查询该包占用的掩码：[`dedic_gpio_get_out_mask()`](https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html#_CPPv423dedic_gpio_get_out_mask26dedic_gpio_bundle_handle_tP8uint32_t) 和/或 [`dedic_gpio_get_in_mask()`](https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html#_CPPv422dedic_gpio_get_in_mask26dedic_gpio_bundle_handle_tP8uint32_t)
-3. 调用 CPU LL apis（如 cpu_ll_write_dedic_gpio_mask）或使用该掩码编写汇编代码
-4. 切换 IO 的最快捷方式是使用专用的“设置/清除”指令：
-
-
+> 高阶用户可以通过编写汇编代码或调用 CPU 低层 API 来操作 GPIO。常见步骤为：
+>
+> 1. 分配一个 GPIO 捆绑包：[`dedic_gpio_new_bundle()`](https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html#_CPPv421dedic_gpio_new_bundlePK26dedic_gpio_bundle_config_tP26dedic_gpio_bundle_handle_t)
+> 2. 查询该包占用的掩码：[`dedic_gpio_get_out_mask()`](https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html#_CPPv423dedic_gpio_get_out_mask26dedic_gpio_bundle_handle_tP8uint32_t) 和/或 [`dedic_gpio_get_in_mask()`](https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.1/esp32s3/api-reference/peripherals/dedic_gpio.html#_CPPv422dedic_gpio_get_in_mask26dedic_gpio_bundle_handle_tP8uint32_t)
+> 3. 调用 CPU LL apis（如 cpu_ll_write_dedic_gpio_mask）或使用该掩码编写汇编代码
+> 4. 切换 IO 的最快捷方式是使用专用的“设置/清除”指令：
 
 然而遗憾的是，ESP32-S3的一个核只能控制1个专用GPIO组，即8个GPIO口。这样的精度太低，而利用两个核心控制两个GPIO组，又会出现时钟同步的问题，较为麻烦。但通过专用GPIO进行GPIO翻转，其翻转速度可以达到近20MHz，今后或许可以通过专用GPIO组模拟某些协议。
 
