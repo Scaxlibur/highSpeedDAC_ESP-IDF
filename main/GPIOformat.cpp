@@ -10,7 +10,7 @@
 // 配置并行输出GPIO
 bool GPIOformat(){
     //14是时钟位
-    const int Parallel_gpios[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+    const int Parallel_gpios[] = {0, 1, 2, 3, 4, 5, 6, 7};
     gpio_config_t io_conf = {
         .mode = GPIO_MODE_OUTPUT,
     };
@@ -19,7 +19,7 @@ bool GPIOformat(){
         io_conf.pin_bit_mask = 1ULL << Parallel_gpios[i];
         gpio_config(&io_conf);
     }
-    // 创建 bundleA，仅输出
+    // 创建 Parallel，仅输出
     dedic_gpio_bundle_handle_t Parallel = NULL;
     dedic_gpio_bundle_config_t Parallel_config = {
         .gpio_array = Parallel_gpios,

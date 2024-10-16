@@ -7,8 +7,6 @@
 #define FORMAT_SPIFFS_IF_FAILED true
 #define ADC_SAMPLE_SIZE 256
 float ADC_sample[ADC_SAMPLE_SIZE];
-uint32_t sampleRate = 8000; // 示波器显示的采样频率 = sampleRate / sampleStep
-int sampleStep = 1;
 bool chart_refresh = false;
 
 /* 实例化一个波形发生器 */
@@ -16,7 +14,7 @@ WAVE_TYPE wave_type = SAWTOOTH;
 WAVE_GEN wave_gen(3.3, 1.65, 50, 100, wave_type);
 
 /*******************************************************************************
-****函数功能: 核心0上运行的任务2，运行websocket服务器与http服务器，与上位机通过WiFi进行通信
+****函数功能: 核心0上运行的任务2，
 ****入口参数: *arg:
 ****出口参数: 无
 ****函数备注: 将主程序与WiFi通信程序分别放两个核心上运行，提高执行速度
@@ -109,7 +107,7 @@ void command_loop(void)
 
 /*******************************************************************************
 ****函数功能: loop函数
-****出口参数: 无
+****出口参数: 无extern "C" 
 ****函数备注: 程序执行完setup函数后，循环执行loop函数
 ********************************************************************************/
 extern "C" void app_main(void)
