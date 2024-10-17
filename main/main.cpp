@@ -1,13 +1,10 @@
 #include <stdio.h>
 #include <string.h>
+
 #include "GPIOformat.hpp"
 #include "wave_gen.hpp"
 #include "UARTtrans.hpp"
 
-#define FORMAT_SPIFFS_IF_FAILED true
-#define ADC_SAMPLE_SIZE 256
-float ADC_sample[ADC_SAMPLE_SIZE];
-bool chart_refresh = false;
 
 /* 实例化一个波形发生器 */
 WAVE_TYPE wave_type = SAWTOOTH;
@@ -17,7 +14,7 @@ WAVE_GEN wave_gen(3.3, 1.65, 50, 100, wave_type);
 ****函数功能: 核心0上运行的任务2，
 ****入口参数: *arg:
 ****出口参数: 无
-****函数备注: 将主程序与WiFi通信程序分别放两个核心上运行，提高执行速度
+****函数备注: 将主程序与通信程序分别放两个核心上运行，提高执行速度
 ********************************************************************************/
 void Task2(void *arg)
 {
@@ -31,22 +28,6 @@ void Task2(void *arg)
 }
 
 /*******************************************************************************
-****函数功能: 主程序入口
-****出口参数: 无
-****函数备注: 启动后首先执行setup函数，只执行一次
-********************************************************************************/
-void setup()
-{
-  init_uart2pc();//打开串口通信
-  /* 初始化波形发生器 */
-  wave_gen.initTimer();
-  //Serial.println("波形发生器初始化成功");
-  /* 创建任务2，建立并保持与上位机的通信 */
-  xTaskCreatePinnedToCore(Task2, "Task2", 12 * 1024, NULL, 1, NULL, 0);
-  vTaskDelay(50 / portTICK_PERIOD_MS);
-}
-
-/*******************************************************************************
 ****函数功能: 串口通信函数
 ****出口参数: 无
 ****函数备注: 解析串口接收到的上位机指令
@@ -54,11 +35,9 @@ void setup()
 void command_loop(void)
 {
   int length = 0;
-  //char* received_chars = "";
   uart_get_buffered_data_len(UART_NUM_PC, (size_t*)&length);
   // 如果串口是空的直接返回
-  if (length == 0)
-    return;
+  if (length == 0) return;
   char received_chars[10];
   vTaskDelay(1 / portTICK_PERIOD_MS);
   // 从串口读取返回的数据，读取20个字符
@@ -106,14 +85,30 @@ void command_loop(void)
 }
 
 /*******************************************************************************
+****函数功能: 主程序入口
+****出口参数: 无
+****函数备注: 启动后首先执行setup函数，只执行一次
+********************************************************************************/
+void setup()
+{
+  init_uart2pc();//打开串口通信
+  /* 初始化波形发生器 */
+  wave_gen.initTimer();
+  //Serial.println("波形发生器初始化成功");
+  /* 创建任务2，建立并保持与上位机的通信 */
+  xTaskCreatePinnedToCore(Task2, "Task2", 12 * 1024, NULL, 1, NULL, 0);
+  vTaskDelay(50 / portTICK_PERIOD_MS);
+}
+
+/*******************************************************************************
 ****函数功能: loop函数
-****出口参数: 无extern "C" 
+****出口参数: 无
 ****函数备注: 程序执行完setup函数后，循环执行loop函数
 ********************************************************************************/
 extern "C" void app_main(void)
 {
   setup ();
-  while (1)
+  while (true)
   {
     command_loop();
     vTaskDelay(45 / portTICK_PERIOD_MS);

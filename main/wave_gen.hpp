@@ -10,7 +10,7 @@
 #define ADC_MAX_VALUE 16384
 #define ADC_MAX_VOLTAGE 3.3f
 #define PI 3.14159
-#define TIME_CLOCK_HZ (80 * 1000 * 1000)
+#define TIME_CLOCK_HZ (40 * 1000 * 1000) //40MHz
 
 enum WAVE_TYPE
 {
@@ -28,19 +28,8 @@ public:
     int duty = 50;                  // 占空比%(方波)
     WAVE_TYPE wave_type = SAWTOOTH; // 波形种类
     unsigned int freq = 100;        // 频率
-    // String param = "";
-
     unsigned int freq_old = 100;        // 上一次的频率
     uint8_t waveTab1[SAMPLE_PER_CYCLE]; // 生成的波形数据
-
-    uint32_t sample_rate = 8000; // i2s_adc的采样速度，仅用于发送
-    uint8_t sampleStep = 1;      // i2s_adc的取样间隔，仅用于发送
-    uint8_t trigger_mode = 3;    // i2s_adc的触发模式，仅用于发送
-
-    /* 波形模式切换按键 */
-    const int button = 12; // 波形切换引脚位置
-    char received_data[5] = {0};
-    unsigned int rec_cnt1 = 0;
 
     /*波形定时器设定*/
     gptimer_handle_t waveCounterTimer_handle = NULL;
@@ -48,7 +37,7 @@ public:
     gptimer_config_t waveCounterTimer_config = {
         .clk_src = GPTIMER_CLK_SRC_APB,     // 时钟源,APB时钟最快不超过80MHz
         .direction = GPTIMER_COUNT_UP,      // 时钟计数方向
-        .resolution_hz = TIME_CLOCK_HZ,     // 80MHz, 1 tick = 0.125us             //时钟频率配置
+        .resolution_hz = TIME_CLOCK_HZ,     // 40MHz, 1 tick = 0.25us             //时钟频率配置
         .intr_priority = 0,                 // 中断优先级
     };
     gptimer_alarm_config_t waveCounterTimer_alarm_config = {
@@ -60,14 +49,13 @@ public:
     };
 
     /* 各种函数，波形发生器相关以及定时器相关的 */
-    WAVE_GEN(double uMaxValue, double offSetValue, int duty, unsigned int freq, WAVE_TYPE wave_type);
-    ~WAVE_GEN();
+    WAVE_GEN(double uMaxValue, double offSetValue, int duty, unsigned int freq, WAVE_TYPE wave_type);   //构造函数
+    ~WAVE_GEN();                                                                                        //析构函数
     int set_uMaxValue(double value);
     int set_offSetValue(double value);
     int set_duty(int value);
     int set_freq(int value);
     int set_wave_type(WAVE_TYPE wave_type);
-    // String get_param();
     bool waveAlramTimer_config();
     void initTimer();
     void updateTimer();
