@@ -38,7 +38,9 @@ WAVE_GEN::WAVE_GEN(double uMaxValue, double offSetValue, int duty, unsigned int 
 ****函数备注: 对象销毁前自动调用
 ********************************************************************************/
 WAVE_GEN::~WAVE_GEN() {
-
+  ESP_ERROR_CHECK(gptimer_stop(waveCounterTimer_handle));
+  ESP_ERROR_CHECK(gptimer_disable(waveCounterTimer_handle));
+  ESP_ERROR_CHECK(gptimer_del_timer(waveCounterTimer_handle));
 }
 
 /*******************************************************************************
@@ -71,7 +73,7 @@ bool WAVE_GEN::waveAlramTimer_config()
   const gptimer_event_callbacks_t cbs = {// 下面将要用到的回调函数(必须是布尔类型)，结构体里面写回调函数的指针
                                          .on_alarm = wave_alarm_cb_t
                                          };
-  gptimer_register_event_callbacks(waveCounterTimer_handle, &cbs, NULL); // 第一个参数是配置时钟的句柄地址，第二个是回调函数结构体的地址，第三个是传递给回调函数的值
+  ESP_ERROR_CHECK(gptimer_register_event_callbacks(waveCounterTimer_handle, &cbs, NULL)); // 第一个参数是配置时钟的句柄地址，第二个是回调函数结构体的地址，第三个是传递给回调函数的值
   return true;
 }
 
