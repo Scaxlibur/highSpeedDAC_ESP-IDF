@@ -105,7 +105,7 @@ void setup()
 ****出口参数: 无
 ****函数备注: 程序执行完setup函数后，循环执行loop函数
 ********************************************************************************/
-extern "C" void app_main(void)
+extern "C" void app_main(void) //ESP-IDF 希望应用程序入口点 app_main 以 C 链接定义。当 app_main 在 .cpp 源文件中定义时，必须以 extern "C" 标识
 {
   setup ();
   while (true)
