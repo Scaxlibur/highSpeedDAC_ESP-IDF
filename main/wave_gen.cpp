@@ -90,7 +90,7 @@ void WAVE_GEN::initTimer()
   /* 设置闹钟每秒调用wave_alarm_cb_t函数1 tick为0.25us   => 1秒为1000000us */
   uint32_t T = (4 * 1000000 * wave_index_step) / (freq * SAMPLE_PER_CYCLE);
   this->waveCounterTimer_config = {
-    .clk_src = GPTIMER_CLK_SRC_APB,     // 时钟源,APB时钟最快不超过80MHz
+    .clk_src = GPTIMER_CLK_SRC_DEFAULT,     // 时钟源,APB时钟最快不超过80MHz
     .direction = GPTIMER_COUNT_UP,      // 时钟计数方向
     .resolution_hz = TIME_CLOCK_HZ,     // 40MHz, 1 tick = 0.25us             //时钟频率配置
     .intr_priority = 0,                 // 中断优先级

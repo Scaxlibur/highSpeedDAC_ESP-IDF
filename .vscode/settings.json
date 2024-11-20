@@ -1,5 +1,7 @@
 {
-    "idf.adapterTargetName": "esp32s3",
+    "idf.adapterTargetName": "esp32p4",
     "idf.portWin": "COM13",
-    "C_Cpp.errorSquiggles": "disabled"
+    "idf.openOcdConfigs": [
+        "board/esp32p4-builtin.cfg"
+    ]
 }

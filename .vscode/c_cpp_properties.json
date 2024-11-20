@@ -1,19 +1,20 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "ESP-IDF",
+            "compilerPath": "${config:idf.toolsPathWin}\\tools\\riscv32-esp-elf\\esp-13.2.0_20240530\\riscv32-esp-elf\\bin\\riscv32-esp-elf-gcc.exe",
+            "compileCommands": "${config:idf.buildPath}/compile_commands.json",
             "includePath": [
-                "${workspaceFolder}/**",
-                "D:\\code\\ESP32\\v5.3.1\\esp-idf\\**"
+                "${config:idf.espIdfPathWin}/components/**",
+                "${workspaceFolder}/**"
             ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
-            "cStandard": "c11",
-            "cppStandard": "gnu++14",
-            "intelliSenseMode": "windows-gcc-x64"
+            "browse": {
+                "path": [
+                    "${config:idf.espIdfPathWin}/components",
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
         }
     ],
     "version": 4

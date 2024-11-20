@@ -35,7 +35,7 @@ public:
     gptimer_handle_t waveCounterTimer_handle = NULL;
     //gptimer_handle_t& _waveCounterTimer_handle = waveCounterTimer_handle;
     gptimer_config_t waveCounterTimer_config = {
-        .clk_src = GPTIMER_CLK_SRC_APB,     // 时钟源,APB时钟最快不超过80MHz
+        .clk_src = GPTIMER_CLK_SRC_DEFAULT,     // 时钟源,APB时钟最快不超过80MHz
         .direction = GPTIMER_COUNT_UP,      // 时钟计数方向
         .resolution_hz = TIME_CLOCK_HZ,     // 40MHz, 1 tick = 0.25us             //时钟频率配置
         .intr_priority = 0,                 // 中断优先级
